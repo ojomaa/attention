@@ -1,5 +1,7 @@
 import sys
 import tensorflow as tf
+import numpy as np
+from tensorflow.python.ops.numpy_ops import np_config
 
 from PIL import Image, ImageDraw, ImageFont
 from transformers import AutoTokenizer, TFBertForMaskedLM
@@ -47,7 +49,7 @@ def get_mask_token_index(mask_token_id, inputs):
     """
     input_array = inputs.get('input_ids', [])
     input_id = input_array[0]
-
+    print(input_id)
     for index, token_id in enumerate(input_id):
         if token_id == mask_token_id:
             return index
@@ -61,6 +63,7 @@ def get_color_for_attention_score(attention_score):
     Return a tuple of three integers representing a shade of gray for the
     given `attention_score`. Each value should be in the range [0, 255].
     """
+    # Then I picked up a [MASK] from the table
     color = int(attention_score * 255)
     return color, color, color
 
@@ -76,12 +79,15 @@ def visualize_attentions(tokens, attentions):
     (starting count from 1).
     """
     # TODO: Update this function to produce diagrams for all layers and heads.
-    generate_diagram(
-        1,
-        1,
-        tokens,
-        attentions[0][0][0]
-    )
+    for i in range(len(attentions)):
+        for j in range(len(attentions[i])):
+            for k in range(len(attentions[i][j])):
+                generate_diagram(
+                    i + 1,
+                    k + 1,
+                    tokens,
+                    attentions[i][j][k]
+                )
 
 
 def generate_diagram(layer_number, head_number, tokens, attention_weights):
