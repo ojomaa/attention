@@ -48,10 +48,9 @@ def get_mask_token_index(mask_token_id, inputs):
     input_array = inputs.get('input_ids', [])
     input_id = input_array[0]
 
-    if input_array:
-        for index, token_id in enumerate(input_id):
-            if token_id == mask_token_id:
-                return index
+    for index, token_id in enumerate(input_id):
+        if token_id == mask_token_id:
+            return index
     
     return None
 
@@ -62,9 +61,8 @@ def get_color_for_attention_score(attention_score):
     Return a tuple of three integers representing a shade of gray for the
     given `attention_score`. Each value should be in the range [0, 255].
     """
-    # TODO: Implement this function
-    raise NotImplementedError
-
+    color = int(attention_score * 255)
+    return color, color, color
 
 
 def visualize_attentions(tokens, attentions):
